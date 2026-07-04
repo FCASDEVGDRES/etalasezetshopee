@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etalase — Deal Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --panel:#131313;
+    --panel-2:#1a1a1a;
+    --line:#262626;
+    --white:#f2f2f0;
+    --gray:#8a8a86;
+    --green:#00ff66;
+    --green-dim:rgba(0,255,102,.12);
+    --green-line:rgba(0,255,102,.35);
+    --shopee-orange:#ee4d2d;
+    --radius:14px;
+    --font-display:'Sora',sans-serif;
+    --font-body:'Inter',sans-serif;
+    --font-mono:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--white);font-family:var(--font-body);
+    background-image:
+      linear-gradient(rgba(0,255,102,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,102,0.025) 1px, transparent 1px);
+    background-size:38px 38px;
+  }
+  ::selection{background:var(--green);color:#000;}
+
+  /* HEADER */
+  header{padding:36px 24px 24px;max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green);}
+  .brand-name{font-family:var(--font-display);font-weight:800;font-size:22px;letter-spacing:.5px;}
+  .brand-name span{color:var(--green);}
+  header p.tag{color:var(--gray);font-family:var(--font-mono);font-size:13px;margin-top:6px;letter-spacing:.5px;}
+  .shopee-badge{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);
+    padding:8px 14px;border-radius:100px;font-family:var(--font-mono);font-size:12px;color:var(--gray);white-space:nowrap;}
+  .shopee-badge b{color:var(--shopee-orange);font-family:var(--font-display);font-weight:700;}
+
+  /* GRID */
+  .section-title{max-width:1120px;margin:0 auto;padding:12px 24px 14px;display:flex;justify-content:space-between;align-items:baseline;}
+  .section-title h2{font-family:var(--font-display);font-size:16px;letter-spacing:.4px;margin:0;}
+  .count{font-family:var(--font-mono);color:var(--gray);font-size:12px;}
+  .grid{max-width:1120px;margin:0 auto;padding:0 24px 60px;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;cursor:pointer;
+    transition:border-color .15s ease, transform .15s ease;position:relative;}
+  .card:hover{border-color:var(--green-line);transform:translateY(-3px);}
+  .card .thumb-wrap{position:relative;width:100%;aspect-ratio:1/1;background:#000;border-bottom:1px solid var(--line);}
+  .card .thumb{width:100%;height:100%;object-fit:cover;display:block;}
+  .card .multi-badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);color:var(--white);
+    font-family:var(--font-mono);font-size:10px;padding:3px 7px;border-radius:6px;border:1px solid var(--line);}
+  .card .body{padding:12px 13px 14px;}
+  .card .title{font-size:13.5px;line-height:1.35;height:36px;overflow:hidden;margin-bottom:8px;}
+  .price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}
+  .price-now{font-family:var(--font-mono);font-weight:700;color:var(--green);font-size:15px;}
+  .price-old{font-family:var(--font-mono);color:var(--gray);font-size:12px;text-decoration:line-through;}
+  .badge-diskon{font-family:var(--font-mono);font-size:10px;background:var(--green-dim);color:var(--green);
+    border:1px solid var(--green-line);padding:2px 6px;border-radius:5px;}
+  .meta-row{margin-top:8px;display:flex;justify-content:space-between;color:var(--gray);font-size:11px;font-family:var(--font-mono);}
+
+  /* MOBILE — layout rapat 2 kolom ala Shopee */
+  @media(max-width:640px){
+    header{padding:16px 12px 14px;gap:10px;}
+    .brand-name{font-size:18px;}
+    header p.tag{font-size:11px;}
+    .shopee-badge{padding:6px 10px;font-size:10.5px;}
+    .section-title{padding:8px 12px 10px;}
+    .section-title h2{font-size:14px;}
+    .grid{grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 40px;}
+    .card{border-radius:8px;}
+    .card .body{padding:8px 8px 10px;}
+    .card .title{font-size:12px;line-height:1.3;height:31px;margin-bottom:6px;}
+    .price-now{font-size:13.5px;}
+    .price-old{font-size:10.5px;}
+    .badge-diskon{font-size:9px;padding:1px 5px;}
+    .meta-row{font-size:9.5px;margin-top:6px;}
+    .multi-badge{font-size:9px;padding:2px 5px;bottom:6px;right:6px;}
+    .modal{max-width:100%;max-height:92vh;border-radius:14px 14px 0 0;}
+    .modal-body{padding:16px 16px 20px;}
+    .modal-body h3{font-size:16px;}
+    .modal .price-now{font-size:19px;}
+  }
+
+  .empty{max-width:1120px;margin:0 auto;padding:60px 24px;text-align:center;color:var(--gray);font-family:var(--font-mono);font-size:13px;}
+  .empty b{color:var(--white);font-family:var(--font-display);display:block;margin-bottom:6px;font-size:16px;}
+
+  /* MODAL */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(3px);display:none;
+    align-items:center;justify-content:center;padding:20px;z-index:50;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--panel);border:1px solid var(--line);border-radius:16px;max-width:520px;width:100%;
+    max-height:88vh;overflow-y:auto;}
+
+  /* SLIDER */
+  .slider{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-bottom:1px solid var(--line);
+    background:#000;touch-action:pan-y;}
+  .slider-track{display:flex;height:100%;transition:transform .3s ease;}
+  .slider-track img{width:100%;height:100%;object-fit:cover;flex-shrink:0;}
+  .slider-arrow{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;
+    background:rgba(0,0,0,.55);border:1px solid var(--line);color:var(--white);cursor:pointer;font-size:16px;
+    display:flex;align-items:center;justify-content:center;z-index:2;}
+  .slider-arrow.prev{left:10px;} .slider-arrow.next{right:10px;}
+  .slider-arrow:hover{border-color:var(--green-line);color:var(--green);}
+  .slider-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:2;}
+  .slider-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:background .15s;}
+  .slider-dots span.active{background:var(--green);}
+  .slider-count{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:var(--white);
+    font-family:var(--font-mono);font-size:11px;padding:3px 8px;border-radius:20px;border:1px solid var(--line);z-index:2;}
+
+  .modal-body{padding:20px 22px 24px;}
+  .modal-body h3{font-family:var(--font-display);font-size:18px;margin:0 0 10px;line-height:1.35;}
+  .modal .price-row{margin-bottom:10px;}
+  .modal .price-now{font-size:22px;}
+  .modal .desc{color:#c9c9c6;font-size:13.5px;line-height:1.6;white-space:pre-wrap;margin:14px 0 0;position:relative;}
+  .modal .desc.clamped{max-height:140px;overflow:hidden;}
+  .modal .desc.clamped::after{content:'';position:absolute;bottom:0;left:0;right:0;height:48px;
+    background:linear-gradient(to bottom, transparent, var(--panel));}
+  .read-more-btn{display:none;background:none;border:none;color:var(--green);font-family:var(--font-mono);
+    font-size:12px;cursor:pointer;padding:8px 0 4px;margin-bottom:12px;text-align:left;}
+  .read-more-btn.visible{display:block;}
+  .modal .affiliate-note{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--gray);
+    border:1px dashed var(--line);padding:8px 10px;border-radius:8px;margin-bottom:16px;}
+  .cta{width:100%;background:var(--green);color:#001a0a;border:none;padding:14px;border-radius:10px;
+    font-family:var(--font-display);font-weight:800;font-size:15px;cursor:pointer;letter-spacing:.3px;
+    display:flex;align-items:center;justify-content:center;gap:8px;}
+  .cta:hover{filter:brightness(1.05);}
+  .modal-close{position:sticky;top:10px;float:right;margin:10px;background:rgba(0,0,0,.6);border:1px solid var(--line);
+    color:var(--white);width:30px;height:30px;border-radius:8px;cursor:pointer;z-index:3;}
+
+  /* CONFIRM */
+  .confirm-box{background:var(--panel);border:1px solid var(--green-line);border-radius:14px;max-width:360px;width:100%;padding:24px;text-align:center;}
+  .confirm-box .shopee-mini{display:flex;justify-content:center;margin-bottom:14px;}
+  .confirm-box p{font-size:14px;color:#dcdcd8;line-height:1.5;margin:0 0 20px;}
+  .confirm-box p b{color:var(--shopee-orange);}
+  .confirm-actions{display:flex;gap:10px;}
+  .confirm-actions button{flex:1;cursor:pointer;border:none;font-family:var(--font-display);font-weight:700;border-radius:9px;padding:12px;font-size:14px;}
+  .btn-ghost{background:transparent;border:1px solid var(--line) !important;color:var(--white);}
+  .btn-primary{background:var(--green);color:#001a0a;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="brand"><span class="dot"></span><span class="brand-name">ETALASE<span>.</span>ID</span></div>
+    <p class="tag">// deal terminal — rekomendasi produk pilihan</p>
+  </div>
+  <div class="shopee-badge">
+    <svg width="16" height="16" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M24 6C19 6 15 10 15 15H10L7 40C7 42.5 9 44 11 44H37C39 44 41 42.5 41 40L38 15H33C33 10 29 6 24 6ZM24 10C26.8 10 29 12.2 29 15H19C19 12.2 21.2 10 24 10Z" fill="#EE4D2D"/>
+    </svg>
+    Affiliate resmi <b>Shopee</b>
+  </div>
+</header>
+
+<div class="section-title"><h2>Semua Produk</h2><span class="count" id="prodCount">0 produk</span></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="emptyState" style="display:none;">
+  <b>Belum ada produk</b>
+  Tambahkan produk lewat array <code>products</code> di dalam kode.
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeDetail()">✕</button>
+
+    <div class="slider" id="slider">
+      <div class="slider-track" id="sliderTrack"></div>
+      <button class="slider-arrow prev" onclick="prevImg()">‹</button>
+      <button class="slider-arrow next" onclick="nextImg()">›</button>
+      <div class="slider-count" id="sliderCount"></div>
+      <div class="slider-dots" id="sliderDots"></div>
+    </div>
+
+    <div class="modal-body">
+      <h3 id="d-title"></h3>
+      <div class="price-row">
+        <span class="price-now" id="d-now"></span>
+        <span class="price-old" id="d-old"></span>
+        <span class="badge-diskon" id="d-badge"></span>
+      </div>
+      <div class="meta-row" id="d-meta" style="margin-top:0;"></div>
+      <div class="desc" id="d-desc"></div>
+      <button class="read-more-btn" id="readMoreBtn" onclick="toggleDesc()">Lihat Selengkapnya ▾</button>
+      <div class="affiliate-note">
+        <svg width="14" height="14" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6C19 6 15 10 15 15H10L7 40C7 42.5 9 44 11 44H37C39 44 41 42.5 41 40L38 15H33C33 10 29 6 24 6ZM24 10C26.8 10 29 12.2 29 15H19C19 12.2 21.2 10 24 10Z" fill="#EE4D2D"/>
+        </svg>
+        Ini link affiliate. Kamu akan diarahkan ke Shopee untuk pembelian.
+      </div>
+      <button class="cta" onclick="askRedirect()">
+        <svg width="18" height="18" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 6C19 6 15 10 15 15H10L7 40C7 42.5 9 44 11 44H37C39 44 41 42.5 41 40L38 15H33C33 10 29 6 24 6ZM24 10C26.8 10 29 12.2 29 15H19C19 12.2 21.2 10 24 10Z" fill="#001a0a"/>
+        </svg>
+        Masuk ke Shopee
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="shopee-mini">
+      <svg width="30" height="30" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 6C19 6 15 10 15 15H10L7 40C7 42.5 9 44 11 44H37C39 44 41 42.5 41 40L38 15H33C33 10 29 6 24 6ZM24 10C26.8 10 29 12.2 29 15H19C19 12.2 21.2 10 24 10Z" fill="#EE4D2D"/>
+      </svg>
+    </div>
+    <p>Kamu akan diarahkan keluar dari halaman ini menuju <b>Shopee</b> untuk melihat produk ini. Lanjutkan?</p>
+    <div class="confirm-actions">
+      <button class="btn-ghost" onclick="closeConfirm()">Batal</button>
+      <button class="btn-primary" onclick="goToShopee()">Ya, lanjutkan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DAFTAR PRODUK
+   Copy-paste blok { ... } di bawah untuk menambah produk baru.
+   Untuk beberapa foto, isi array `images` dengan banyak link
+   foto — otomatis jadi slider yang bisa digeser.
+   ============================================================ */
+const products = [
+  {
+    no: 1,   // nomor produk — cuma buat catatanmu sendiri, TIDAK tampil di halaman
+    images: [
+      "https://placehold.co/500x500/141414/00ff66?text=Foto+1",
+      "https://placehold.co/500x500/141414/00ff66?text=Foto+2",
+      "https://placehold.co/500x500/141414/00ff66?text=Foto+3"
+    ],
+    title: "Contoh Nama Produk — Ganti Sesuai Produkmu",
+    old: 150000,
+    now: 89000,
+    rating: "4.8",
+    sold: "1.2rb",
+    // Deskripsi panjang WAJIB pakai tanda backtick ` di awal dan akhir (bukan tanda kutip " "),
+    // supaya boleh ganti baris (enter) sebanyak apapun di dalamnya.
+    desc: `Ukuran:
+
+S  - Panjang Baju   : 62cm
+     - Lingkar Dada  : 98 cm
+     - Lebar bahu    : 52 cm
+   (Rekomendasi berat badan 45 - 52.5)
+
+M  - Panjang Baju   : 65cm
+     - Lingkar Dada  : 102 cm
+     - Lebar bahu    : 53 cm
+   (Rekomendasi berat badan 52.7 - 57.5)
+
+L  - Panjang Baju   : 68cm
+     - Lingkar Dada  : 106 cm
+     - Lebar bahu    : 54 cm
+   (Rekomendasi berat badan 57.5 - 65.5)
+
+XL - Panjang Baju   : 71cm
+     - Lingkar Dada  : 112 cm
+     - Lebar bahu    : 55 cm
+   (Rekomendasi berat badan 62.5 - 67.5)
+
+2XL - Panjang Baju  : 74cm
+     - Lingkar Dada  : 118 cm
+     - Lebar bahu    : 56 cm
+   (Rekomendasi berat badan 67.5 - 72.5)
+
+3XL - Panjang Baju  : 77cm
+     - Lingkar Dada  : 124 cm
+     - Lebar bahu    : 57 cm
+   (Rekomendasi berat badan 72.5 - 82.5)
+
+Silahkan lihat panduan ukuran di deskripsi produk.
+Jika ada kesalahpahaman tentang ukuran, silakan hubungi layanan pelanggan secara langsung.
+
+Material Kain:
+• Bahan Kain Cotton Combed 24s
+• Bahan Tidak Tipis (Gramasi Terbaik)
+• Bahan Menyerap Keringat & Tidak Panas
+• Tidak Berbulu
+• Bahan Halus, Adem & Lembut
+• Kerah O-Neck
+• Jahitan Rantai
+
+Unisex (bisa dipakai cowok - cewek)
+- SABLON: MANUAL SCREEN PRINTING (PLASTISOL) FINISHING HOTPRESS`,
+    link: "https://shopee.co.id/ganti-dengan-link-affiliate-kamu"
+  },
+  // Contoh kosong untuk produk berikutnya — copy paste blok ini, ganti nomor & isinya:
+  // {
+  //   no: 2,
+  //   images: ["link-foto-1.jpg", "link-foto-2.jpg"],
+  //   title: "...", old: 0, now: 0, rating: "", sold: "",
+  //   desc: `Tulis deskripsi di sini,
+  // boleh ganti baris sepuasnya
+  // karena pakai backtick.`,
+  //   link: "..."
+  // },
+];
+/* ============================================================ */
+
+let activeProduct = null;
+let currentImg = 0;
+
+function rupiah(n){ return 'Rp' + Number(n).toLocaleString('id-ID'); }
+function getImages(p){ return (p.images && p.images.length) ? p.images : (p.img ? [p.img] : []); }
+
+function render(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('prodCount').textContent = products.length + ' produk';
+  grid.innerHTML = '';
+  if(products.length === 0){ empty.style.display='block'; return; }
+  empty.style.display='none';
+  products.forEach((p, i) => {
+    const imgs = getImages(p);
+    const disc = p.old > p.now ? Math.round((1 - p.now/p.old)*100) : 0;
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.onclick = () => openDetail(i);
+    card.innerHTML = `
+      <div class="thumb-wrap">
+        <img class="thumb" src="${imgs[0] || ''}" alt="${p.title}" onerror="this.src='https://placehold.co/400x400/141414/00ff66?text=No+Image'">
+        ${imgs.length > 1 ? `<span class="multi-badge">📷 ${imgs.length}</span>` : ''}
+      </div>
+      <div class="body">
+        <div class="title">${p.title}</div>
+        <div class="price-row">
+          <span class="price-now">${rupiah(p.now)}</span>
+          ${p.old > p.now ? `<span class="price-old">${rupiah(p.old)}</span>` : ''}
+          ${disc > 0 ? `<span class="badge-diskon">${disc}%</span>` : ''}
+        </div>
+        <div class="meta-row"><span>⭐ ${p.rating || '-'}</span><span>Terjual ${p.sold || '-'}</span></div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function buildSlider(imgs){
+  const track = document.getElementById('sliderTrack');
+  const dots = document.getElementById('sliderDots');
+  track.innerHTML = imgs.map(src => `<img src="${src}" onerror="this.src='https://placehold.co/500x500/141414/00ff66?text=No+Image'">`).join('');
+  dots.innerHTML = imgs.map((_, i) => `<span onclick="goToImg(${i})"></span>`).join('');
+  currentImg = 0;
+  updateSlider();
+  document.querySelector('.slider-arrow.prev').style.display = imgs.length > 1 ? 'flex' : 'none';
+  document.querySelector('.slider-arrow.next').style.display = imgs.length > 1 ? 'flex' : 'none';
+}
+
+function updateSlider(){
+  const imgs = getImages(activeProduct);
+  document.getElementById('sliderTrack').style.transform = `translateX(-${currentImg * 100}%)`;
+  document.getElementById('sliderCount').textContent = `${currentImg + 1}/${imgs.length}`;
+  document.querySelectorAll('#sliderDots span').forEach((d, i) => d.classList.toggle('active', i === currentImg));
+}
+function nextImg(){ const imgs = getImages(activeProduct); currentImg = (currentImg + 1) % imgs.length; updateSlider(); }
+function prevImg(){ const imgs = getImages(activeProduct); currentImg = (currentImg - 1 + imgs.length) % imgs.length; updateSlider(); }
+function goToImg(i){ currentImg = i; updateSlider(); }
+
+/* swipe support (touch) */
+let touchStartX = 0;
+document.getElementById('slider').addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.getElementById('slider').addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if(diff > 40) prevImg();
+  else if(diff < -40) nextImg();
+});
+
+function openDetail(i){
+  activeProduct = products[i];
+  const p = activeProduct;
+  const imgs = getImages(p);
+  const disc = p.old > p.now ? Math.round((1 - p.now/p.old)*100) : 0;
+  buildSlider(imgs);
+  document.getElementById('d-title').textContent = p.title;
+  document.getElementById('d-now').textContent = rupiah(p.now);
+  document.getElementById('d-old').textContent = p.old > p.now ? rupiah(p.old) : '';
+  document.getElementById('d-badge').textContent = disc > 0 ? disc + '% OFF' : '';
+  document.getElementById('d-meta').textContent = `⭐ ${p.rating || '-'}   ·   Terjual ${p.sold || '-'}`;
+  const descEl = document.getElementById('d-desc');
+  const btn = document.getElementById('readMoreBtn');
+  descEl.textContent = p.desc || 'Tidak ada deskripsi.';
+  descEl.classList.add('clamped');
+  btn.textContent = 'Lihat Selengkapnya ▾';
+  btn.classList.remove('visible');
+  document.getElementById('detailOverlay').classList.add('show');
+  // cek apakah teksnya kepanjangan sampai perlu dipotong, baru munculkan tombolnya
+  setTimeout(() => {
+    if(descEl.scrollHeight > descEl.clientHeight + 5){
+      btn.classList.add('visible');
+    } else {
+      descEl.classList.remove('clamped');
+    }
+  }, 0);
+}
+
+function toggleDesc(){
+  const descEl = document.getElementById('d-desc');
+  const btn = document.getElementById('readMoreBtn');
+  const isClamped = descEl.classList.toggle('clamped');
+  btn.textContent = isClamped ? 'Lihat Selengkapnya ▾' : 'Sembunyikan ▴';
+}
+function closeDetail(){ document.getElementById('detailOverlay').classList.remove('show'); }
+
+function askRedirect(){ document.getElementById('confirmOverlay').classList.add('show'); }
+function closeConfirm(){ document.getElementById('confirmOverlay').classList.remove('show'); }
+function goToShopee(){
+  if(activeProduct && activeProduct.link){ window.open(activeProduct.link, '_blank'); }
+  closeConfirm(); closeDetail();
+}
+
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click', e=>{ if(e.target === ov) ov.classList.remove('show'); });
+});
+
+render();
+</script>
+</body>
+</html>
